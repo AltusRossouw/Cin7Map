@@ -1,0 +1,14 @@
+[
+  {
+    "customer": "Alice Test",
+    "address": "101 Test Ave, Pretoria, 0001, South Africa"
+  },
+  {
+    "customer": "Bob Dev",
+    "address": "202 Dev Lane, Bloemfontein, 9300, South Africa"
+  },
+  {
+    "customer": "Carol Mock",
+    "address": "303 Cape Rd, Port Elizabeth, 6001, South Africa"
+  }
+]

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Order Map Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    html, body { margin: 0; padding: 0; height: 100%; }
+    #map { height: 100%; width: 100vw; }
+    .leaflet-popup-content { font-size: 1.2em; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    const map = L.map('map').setView([0, 0], 2);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+    fetch('/orders')
+      .then(res => res.json())
+      .then(async orders => {
+        for (const order of orders) {
+          const coords = await geocode(order.address);
+          if (coords) {
+            L.marker([coords.lat, coords.lon]).addTo(map)
+              .bindPopup(`<b>${order.customer}</b><br>${order.address}`);
+          }
+        }
+      });
+
+    async function geocode(address) {
+      try {
+        const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json`);
+        const data = await res.json();
+        if (data && data[0]) return { lat: data[0].lat, lon: data[0].lon };
+        else return null;
+      } catch (e) {
+        console.error('Geocode error:', e);
+        return null;
+      }
+    }
+  </script>
+</body>
+</html>
